@@ -11,7 +11,8 @@ import minimist from 'minimist';
 import nodeResolve from '@rollup/plugin-node-resolve';
 
 // Get browserslist config and remove ie from es build targets
-const esbrowserslist = fs.readFileSync('./.browserslistrc')
+const esbrowserslist = fs
+  .readFileSync('./.browserslistrc')
   .toString()
   .split('\n')
   .filter((entry) => entry && entry.substring(0, 2) !== 'ie');
@@ -65,97 +66,35 @@ const globals = {
 };
 
 // Customize configs for individual targets
-const buildFormats = [];
-if (!argv.format || argv.format === 'es') {
-  const esConfig = {
-    ...baseConfig,
-    external,
-    output: {
-      file: 'dist/page-vue.esm.js',
-      format: 'esm',
-      exports: 'named',
-    },
-    plugins: [
-      replace({
-        ...baseConfig.plugins.replace,
-        'process.env.ES_BUILD': JSON.stringify('true'),
-      }),
-      ...baseConfig.plugins.preVue,
-      vue(baseConfig.plugins.vue),
-      babel({
-        ...baseConfig.plugins.babel,
-        presets: [
-          [
-            '@babel/preset-env',
-            {
-              targets: esbrowserslist,
-            },
-          ],
+export default {
+  ...baseConfig,
+  external,
+  output: {
+    file: 'dist/page-vue.esm.js',
+    format: 'esm',
+    exports: 'named',
+  },
+  plugins: [
+    replace({
+      ...baseConfig.plugins.replace,
+      'process.env.ES_BUILD': JSON.stringify('true'),
+    }),
+    ...baseConfig.plugins.preVue,
+    vue(baseConfig.plugins.vue),
+    babel({
+      ...baseConfig.plugins.babel,
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            targets: esbrowserslist,
+          },
         ],
-      }),
-      commonjs(),
-      nodeResolve()
-    ],
-  };
-  buildFormats.push(esConfig);
-}
-
-if (!argv.format || argv.format === 'cjs') {
-  const umdConfig = {
-    ...baseConfig,
-    external,
-    output: {
-      compact: true,
-      file: 'dist/page-vue.ssr.js',
-      format: 'cjs',
-      name: 'PageVue',
-      exports: 'named',
-      globals,
-    },
-    plugins: [
-      replace(baseConfig.plugins.replace),
-      ...baseConfig.plugins.preVue,
-      vue({
-        ...baseConfig.plugins.vue,
-        template: {
-          ...baseConfig.plugins.vue.template,
-          optimizeSSR: true,
-        },
-      }),
-      babel(baseConfig.plugins.babel),
-      commonjs(),
-    ],
-  };
-  buildFormats.push(umdConfig);
-}
-
-if (!argv.format || argv.format === 'iife') {
-  const unpkgConfig = {
-    ...baseConfig,
-    external,
-    output: {
-      compact: true,
-      file: 'dist/page-vue.min.js',
-      format: 'iife',
-      name: 'PageVue',
-      exports: 'named',
-      globals,
-    },
-    plugins: [
-      replace(baseConfig.plugins.replace),
-      ...baseConfig.plugins.preVue,
-      vue(baseConfig.plugins.vue),
-      babel(baseConfig.plugins.babel),
-      commonjs(),
-      terser({
-        output: {
-          ecma: 5,
-        },
-      }),
-    ],
-  };
-  buildFormats.push(unpkgConfig);
-}
-
-// Export config
-export default buildFormats;
+      ],
+    }),
+    commonjs(),
+    nodeResolve({
+      extensions: baseConfig.plugins.babel.extensions,
+    }),
+  ],
+};

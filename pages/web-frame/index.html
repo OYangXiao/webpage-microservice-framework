@@ -5,24 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>js micro service demo frame</title>
-    <script defer src="/libs/es-module-shims.min.js"></script>
+    <script defer src="/pages/web-frame/libs/es-module-shims.js"></script>
     <script type="importmap-shim">
       {
         "imports": {
-          "vue":"/libs/vue.esm.browser.min.js"
+          "vue":"/pages/web-frame/libs/vue.esm.browser.min.js",
+          "react":"/pages/web-frame/libs/react.production.esm.js",
+          "react-dom":"/pages/web-frame/libs/react-dom.production.esm.js"
         }
       }
     </script>
+    <style>
+      .test{
+        color: red;
+      }
+    </style>
   </head>
   <body>
     <div id="switch-wrapper">
-      <button data-service-name="page-vue">vue</button>
-      <button data-service-name="page-react">react</button>
-      <button data-service-name="page-flutter">flutter</button>
-      <button data-service-name="page-rust-yew">rust-yew</button>
-      <button data-service-name="page-csharp-blazor">c#-blazor</button>
+      <button class="test" data-service-name="page-vue">vue</button>
+      <button class="test" data-service-name="page-react">react</button>
+      <button class="test" data-service-name="page-flutter">flutter</button>
+      <button class="test" data-service-name="page-rust-yew">rust-yew</button>
+      <button class="test" data-service-name="page-csharp-blazor">c#-blazor</button>
     </div>
     <div id="microservice-holder"></div>
   </body>
-  <script type="module-shim" src="dist/frame.js"></script>
+  <script type="module-shim" src="/pages/web-frame/dist/frame.js"></script>
 </html>
