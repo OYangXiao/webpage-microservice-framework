@@ -7,11 +7,10 @@ export const loadService = async (serviceName: string) => {
     // 如果没有加载过这个微服务，就获取其js文件并加载
 
     const loadedElement = window.customElements.get(serviceName);
+    console.log(loadedElement)
     if (!loadedElement) {
       try {
         const moduleObj = await import(serviceInfo.jsUrl);
-        // const moduleObj = await import('data:text/javascript;charset=utf-8,' + encodeURIComponent(jsContent));
-        console.dir(moduleObj);
         window.customElements.define(serviceName, moduleObj.default);
       } catch (e) {
         console.log(e);
@@ -19,7 +18,7 @@ export const loadService = async (serviceName: string) => {
       }
     }
     // 如果微服务已经加载，则返回成功信息
-    return true;
+    return serviceInfo;
   } else {
     // alert('The requested service is not found.');
     return new Error('service info not found');
