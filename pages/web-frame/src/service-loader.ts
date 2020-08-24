@@ -11,6 +11,7 @@ export const loadService = async (serviceName: string) => {
     if (!loadedElement) {
       try {
         const moduleObj = await import(serviceInfo.jsUrl);
+        console.log(moduleObj)
         window.customElements.define(serviceName, moduleObj.default);
       } catch (e) {
         console.log(e);

@@ -5,11 +5,10 @@ wrapper?.addEventListener('click', async (e) => {
   const serviceName = (e.srcElement as HTMLElement).dataset['serviceName'];
   if (serviceName) {
     const success = await loadService(serviceName);
-    if(success){
-      const serviceElement = document.createElement(serviceName)
-      const holder = document.getElementById('microservice-holder')
-      holder?.appendChild(serviceElement)
-
+    if (success) {
+      const serviceElement = document.createElement(serviceName);
+      const holder = document.getElementById('microservice-holder');
+      holder?.appendChild(serviceElement);
     }
   }
 });
