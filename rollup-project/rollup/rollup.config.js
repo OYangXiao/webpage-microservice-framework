@@ -2,15 +2,13 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import vuePlugin from 'rollup-plugin-vue';
 import babel from '@rollup/plugin-babel';
 
-import componentCollect from './component-collect.js'
+import { componentCollect } from './component-collect';
 
 const resolveExtensions = ['.js', '.jsx', '.ts', '.tsx', '.vue'];
 
-export default {
-  input: './src/components/root/index.ts',
+const basicVueConfig = {
   external: ['vue'],
   plugins: [
-    componentCollect(),
     nodeResolve({ extensions: resolveExtensions }),
     vuePlugin(),
     babel({
@@ -34,7 +32,13 @@ export default {
     format: 'esm',
     exports: 'named',
   },
-  watch:{
-    chokidar: true
-  }
+  watch: {
+    chokidar: true,
+  },
 };
+
+const configs = componentCollect().map((entryPoint) => ({
+  input: entryPoint.dirPath + '/' + entryPoint.indexName,
+  ...basicVueConfig,
+}));
+export default configs;
