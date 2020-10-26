@@ -2,6 +2,8 @@ import { nodeResolve } from '@rollup/plugin-node-resolve';
 import vuePlugin from 'rollup-plugin-vue';
 import path from 'path';
 import babel from '@rollup/plugin-babel';
+import replace from '@rollup/plugin-replace';
+import devServer from 'rollup-plugin-dev';
 
 import { componentCollect } from './component-collect';
 
@@ -27,7 +29,13 @@ const basicVueConfig = {
         ],
       ],
     }),
-  ],
+    replace({
+      exclude: 'node_modules/**',
+      ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
+    }),
+
+    process.env.NODE_ENV === 'development' ? devServer() : undefined,
+  ].filter(Boolean),
   watch: {
     chokidar: true,
   },
